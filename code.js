@@ -1,21 +1,9 @@
-const todoList = document.getElementById("todoList");
-const doingList = document.getElementById("doingList");
-const doneList = document.getElementById("doneList");
-
-const addTodoBtn = document.getElementById("addTodoBtn");
-const addDoingBtn = document.getElementById("addDoingBtn");
-const addDoneBtn = document.getElementById("addDoneBtn");
-
-const delTodoBtn = document.getElementById("delTodoBtn");
-const delDoingBtn = document.getElementById("delDoingBtn");
-const delDoneBtn = document.getElementById("delDoneBtn");
-
 function createTask(text, listType) {
   const li = document.createElement("li");
 
   const span = document.createElement("span");
   span.className = "task-text";
-  span.textContent = text;
+  span.innerHTML = text.replace(/\\n/g, "<br>");
 
   const btnContainer = document.createElement("div");
   btnContainer.className = "task-buttons";
@@ -32,12 +20,16 @@ function createTask(text, listType) {
   rightBtn.textContent = "→";
   rightBtn.className = "task-btn";
 
-  btnContainer.append(leftBtn, editBtn, rightBtn);
+  const deleteBtn = document.createElement("button");
+  deleteBtn.textContent = "×";
+  deleteBtn.className = "task-btn";
+
+  btnContainer.append(leftBtn, editBtn, rightBtn, deleteBtn);
   li.append(span, btnContainer);
 
   editBtn.addEventListener("click", () => {
     const newText = prompt("Измените текст задачи:", span.textContent);
-    if (newText) span.textContent = newText;
+    if (newText) span.innerHTML = newText.replace(/\\n/g, "<br>");
   });
 
   leftBtn.addEventListener("click", () => {
@@ -60,11 +52,15 @@ function createTask(text, listType) {
     }
   });
 
+  deleteBtn.addEventListener("click", () => {
+    li.remove();
+  });
+
   return li;
 }
 
 function addTask(listElement, listType) {
-  const text = prompt("Введите текст задачи:");
+  const text = prompt("Введите текст задачи (для новой строки используйте \\n):");
   if (!text) return;
   const task = createTask(text, listType);
   listElement.appendChild(task);

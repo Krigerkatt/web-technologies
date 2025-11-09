@@ -5,7 +5,7 @@
 body {
   font-family: Segoe UI, Tahoma, Arial, sans-serif;
   margin: 0;
-  background: #f5f6f8;
+  background: #f0f2f5;
   color: #111;
 }
 
@@ -18,19 +18,27 @@ main {
 }
 
 .list_tasks {
-  background: #dcdcdc;
-  padding: 15px;
-  border-radius: 10px;
-  border: 2px solid #333;
-  width: 300px;
+  background: #ffffff;
+  padding: 20px;
+  border-radius: 12px;
+  border: 1px solid #ccc;
+  width: 320px;
   display: flex;
   flex-direction: column;
   align-items: stretch;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  transition: transform 0.2s;
+}
+
+.list_tasks:hover {
+  transform: translateY(-3px);
 }
 
 h2 {
   text-align: center;
-  margin: 0 0 10px 0;
+  margin: 0 0 15px 0;
+  font-size: 20px;
+  color: #333;
 }
 
 ul {
@@ -38,41 +46,56 @@ ul {
   padding: 0;
   margin: 0;
   min-height: 150px;
-  background: white;
-  border-radius: 6px;
-  border: 1px solid #999;
+  background: #f9f9f9;
+  border-radius: 8px;
+  border: 1px solid #ddd;
+  overflow-wrap: break-word;
 }
 
 li {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 6px;
-  border-bottom: 1px solid #ccc;
+  padding: 8px 10px;
+  border-bottom: 1px solid #eee;
+  background: #fff;
+  border-radius: 6px;
+  margin-bottom: 6px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+}
+
+li:last-child {
+  margin-bottom: 0;
+  border-bottom: none;
 }
 
 .task-text {
   flex-grow: 1;
+  word-break: break-word;
+  max-width: 200px;
 }
 
 .task-buttons {
   display: flex;
-  gap: 5px;
+  gap: 4px;
 }
 
 .buttons {
-  margin-top: 10px;
+  margin-top: 12px;
   display: flex;
   justify-content: space-around;
+  flex-wrap: wrap;
 }
 
 button {
-  padding: 6px 10px;
+  padding: 6px 12px;
   border-radius: 5px;
   border: 0;
   background: #7546f7;
   color: #fff;
   cursor: pointer;
+  font-size: 14px;
+  transition: background 0.2s;
 }
 
 button:hover {
@@ -81,10 +104,32 @@ button:hover {
 
 .task-btn {
   background: #888;
-  font-size: 14px;
-  padding: 3px 6px;
+  font-size: 13px;
+  padding: 4px 6px;
+  border-radius: 4px;
+  transition: background 0.2s;
 }
 
 .task-btn:hover {
   background: #666;
+}
+
+@media (max-width: 800px) {
+  main {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .list_tasks {
+    width: 90%;
+  }
+
+  li {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .task-buttons {
+    margin-top: 5px;
+  }
 }
