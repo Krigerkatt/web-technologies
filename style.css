@@ -43,6 +43,23 @@ ul {
   border: 1px solid #999;
 }
 
+li {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 6px;
+  border-bottom: 1px solid #ccc;
+}
+
+.task-text {
+  flex-grow: 1;
+}
+
+.task-buttons {
+  display: flex;
+  gap: 5px;
+}
+
 .buttons {
   margin-top: 10px;
   display: flex;
@@ -50,7 +67,7 @@ ul {
 }
 
 button {
-  padding: 8px 12px;
+  padding: 6px 10px;
   border-radius: 5px;
   border: 0;
   background: #7546f7;
@@ -60,4 +77,14 @@ button {
 
 button:hover {
   background: #5e36d0;
+}
+
+.task-btn {
+  background: #888;
+  font-size: 14px;
+  padding: 3px 6px;
+}
+
+.task-btn:hover {
+  background: #666;
 }
