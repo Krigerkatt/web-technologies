@@ -1,0 +1,63 @@
+* {
+  box-sizing: border-box;
+}
+
+body {
+  font-family: Segoe UI, Tahoma, Arial, sans-serif;
+  margin: 0;
+  background: #f5f6f8;
+  color: #111;
+}
+
+main {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  padding: 20px;
+  flex-wrap: wrap;
+}
+
+.list_tasks {
+  background: #dcdcdc;
+  padding: 15px;
+  border-radius: 10px;
+  border: 2px solid #333;
+  width: 300px;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+}
+
+h2 {
+  text-align: center;
+  margin: 0 0 10px 0;
+}
+
+ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  min-height: 150px;
+  background: white;
+  border-radius: 6px;
+  border: 1px solid #999;
+}
+
+.buttons {
+  margin-top: 10px;
+  display: flex;
+  justify-content: space-around;
+}
+
+button {
+  padding: 8px 12px;
+  border-radius: 5px;
+  border: 0;
+  background: #7546f7;
+  color: #fff;
+  cursor: pointer;
+}
+
+button:hover {
+  background: #5e36d0;
+}

@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Мои задачи</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <main>
+    <section class="list_tasks">
+      <h2>Не выполнены</h2>
+      <ul id="todoList"></ul>
+      <div class="buttons">
+        <button id="addTodoBtn" type="button">Добавить</button>
+        <button id="delTodoBtn" type="button">Удалить</button>
+      </div>
+    </section>
+
+    <section class="list_tasks">
+      <h2>В процессе</h2>
+      <ul id="doingList"></ul>
+      <div class="buttons">
+        <button id="addDoingBtn" type="button">Добавить</button>
+        <button id="delDoingBtn" type="button">Удалить</button>
+      </div>
+    </section>
+
+    <section class="list_tasks">
+      <h2>Выполнены</h2>
+      <ul id="doneList"></ul>
+      <div class="buttons">
+        <button id="addDoneBtn" type="button">Добавить</button>
+        <button id="delDoneBtn" type="button">Удалить</button>
+      </div>
+    </section>
+  </main>
+
+  <script src="code.js"></script>
+</body>
+</html>
