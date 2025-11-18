@@ -1,9 +1,63 @@
-function createTask(text, listType) {
+const modalElement = document.getElementById("modal");
+const modalTitle = document.getElementById("modalTitle");
+const taskTextarea = document.getElementById("taskTextarea");
+const priorityContainer = document.getElementById("priorityContainer");
+const prioritySelect = document.getElementById("prioritySelect");
+const confirmModalBtn = document.getElementById("confirmModalBtn");
+const cancelModalBtn = document.getElementById("cancelModalBtn");
+
+const todoList = document.getElementById("todoList");
+const doingList = document.getElementById("doingList");
+const doneList = document.getElementById("doneList");
+
+const todoTitle = document.getElementById("todoTitle");
+const doingTitle = document.getElementById("doingTitle");
+const doneTitle = document.getElementById("doneTitle");
+
+const addTodoBtn = document.getElementById("addTodoBtn");
+const addDoingBtn = document.getElementById("addDoingBtn");
+const addDoneBtn = document.getElementById("addDoneBtn");
+
+const delTodoBtn = document.getElementById("delTodoBtn");
+const delDoingBtn = document.getElementById("delDoingBtn");
+const delDoneBtn = document.getElementById("delDoneBtn");
+
+const sortTimeBtn = document.getElementById("sortTimeBtn");
+const sortPriorityBtn = document.getElementById("sortPriorityBtn");
+
+let editTaskElement = null;
+let editTaskLi = null;
+
+const prioOrder = { high: 0, medium: 1, low: 2 };
+
+function getCurrentListType(li) {
+  if (todoList.contains(li)) return "todo";
+  if (doingList.contains(li)) return "doing";
+  if (doneList.contains(li)) return "done";
+  return null;
+}
+
+function getListByType(type) {
+  if (type === "todo") return todoList;
+  if (type === "doing") return doingList;
+  if (type === "done") return doneList;
+}
+
+function updateCounts() {
+  todoTitle.textContent = `Не выполнены (${todoList.children.length})`;
+  doingTitle.textContent = `В процессе (${doingList.children.length})`;
+  doneTitle.textContent = `Выполнены (${doneList.children.length})`;
+}
+
+function createTask(text, initialListType, priority) {
   const li = document.createElement("li");
+  li.dataset.priority = priority;
+  li.dataset.time = Date.now();
+  li.classList.add(priority);
 
   const span = document.createElement("span");
   span.className = "task-text";
-  span.innerHTML = text.replace(/\\n/g, "<br>");
+  span.innerHTML = text.replace(/\n/g, "<br>");
 
   const btnContainer = document.createElement("div");
   btnContainer.className = "task-buttons";
@@ -28,42 +82,62 @@ function createTask(text, listType) {
   li.append(span, btnContainer);
 
   editBtn.addEventListener("click", () => {
-    const newText = prompt("Измените текст задачи:", span.textContent);
-    if (newText) span.innerHTML = newText.replace(/\\n/g, "<br>");
+    editTaskElement = span;
+    editTaskLi = li;
+    openEditModal(
+      span.textContent.replace(/<br>/g, "\n"),
+      li.dataset.priority
+    );
   });
 
   leftBtn.addEventListener("click", () => {
-    if (listType === "doing") {
+    const currentType = getCurrentListType(li);
+    if (currentType === "doing") {
       todoList.appendChild(li);
-      listType = "todo";
-    } else if (listType === "done") {
+    } else if (currentType === "done") {
       doingList.appendChild(li);
-      listType = "doing";
     }
+    updateCounts();
   });
 
   rightBtn.addEventListener("click", () => {
-    if (listType === "todo") {
+    const currentType = getCurrentListType(li);
+    if (currentType === "todo") {
       doingList.appendChild(li);
-      listType = "doing";
-    } else if (listType === "doing") {
+    } else if (currentType === "doing") {
       doneList.appendChild(li);
-      listType = "done";
     }
+    updateCounts();
   });
 
   deleteBtn.addEventListener("click", () => {
     li.remove();
+    updateCounts();
   });
 
+  getListByType(initialListType).appendChild(li);
   return li;
 }
 
-function addTask(listElement, listType) {
-  const text = prompt("Введите текст задачи (для новой строки используйте \\n):");
-  if (!text) return;
-  const task = createTask(text, listType);
-  listElement.appendChild(task);
+function openAddModal(type) {
+  currentListType = type;
+  editTaskElement = null;
+  editTaskLi = null;
+  modalTitle.textContent = "Напишите задачу:";
+  priorityContainer.style.display = "block";
+  taskTextarea.value = "";
+  prioritySelect.value = "medium";
+  confirmModalBtn.textContent = "Добавить";
+  modalElement.showModal();
+}
+
+function openEditModal(currentText, currentPriority) {
+  modalTitle.textContent = "Редактировать задачу:";
+  priorityContainer.style.display = "block";
+  taskTextarea.value = currentText;
+  prioritySelect.value = currentPriority;
+  confirmModalBtn.textContent = "Сохранить";
+  modalElement.showModal();
 }
 
 function clearTasks(listElement) {
@@ -71,14 +145,64 @@ function clearTasks(listElement) {
     alert("Нет задач для удаления!");
     return;
   }
-  const confirmDelete = confirm("Удалить все задачи в этой колонке?");
-  if (confirmDelete) listElement.innerHTML = "";
+  if (confirm("Удалить все задачи в этой колонке?")) {
+    listElement.innerHTML = "";
+    updateCounts();
+  }
 }
 
-addTodoBtn.addEventListener("click", () => addTask(todoList, "todo"));
-addDoingBtn.addEventListener("click", () => addTask(doingList, "doing"));
-addDoneBtn.addEventListener("click", () => addTask(doneList, "done"));
+function sortLists(by) {
+  const lists = [todoList, doingList, doneList];
+  lists.forEach(list => {
+    const items = Array.from(list.children);
+    if (by === "time") {
+      items.sort((a, b) => +a.dataset.time - +b.dataset.time);
+    } else if (by === "priority") {
+      items.sort((a, b) => prioOrder[a.dataset.priority] - prioOrder[b.dataset.priority]);
+    }
+    items.forEach(item => list.appendChild(item));
+  });
+}
+
+addTodoBtn.addEventListener("click", () => openAddModal("todo"));
+addDoingBtn.addEventListener("click", () => openAddModal("doing"));
+addDoneBtn.addEventListener("click", () => openAddModal("done"));
 
 delTodoBtn.addEventListener("click", () => clearTasks(todoList));
 delDoingBtn.addEventListener("click", () => clearTasks(doingList));
 delDoneBtn.addEventListener("click", () => clearTasks(doneList));
+
+sortTimeBtn.addEventListener("click", () => sortLists("time"));
+sortPriorityBtn.addEventListener("click", () => sortLists("priority"));
+
+confirmModalBtn.addEventListener("click", () => {
+  const text = taskTextarea.value.trim();
+  if (!text) return;
+
+  if (editTaskElement && editTaskLi) {
+    editTaskElement.innerHTML = text.replace(/\n/g, "<br>");
+    const newPriority = prioritySelect.value;
+    editTaskLi.dataset.priority = newPriority;
+    editTaskLi.classList.remove("high", "medium", "low");
+    editTaskLi.classList.add(newPriority);
+    
+  } else {
+    const priority = prioritySelect.value;
+    createTask(text, currentListType, priority);
+    updateCounts();
+  }
+
+  modalElement.close();
+  taskTextarea.value = "";
+  editTaskElement = null;
+  editTaskLi = null;
+});
+
+cancelModalBtn.addEventListener("click", () => {
+  modalElement.close();
+  taskTextarea.value = "";
+  editTaskElement = null;
+  editTaskLi = null;
+});
+
+updateCounts();
