@@ -1,1 +1,70 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Coffee Heaven – Кофейня</title>
+  <link rel="icon" href="favicon.ico" type="image/x-icon">
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header class="header">
+    <div class="container">
+      <button class="burger" aria-label="Открыть меню">
+        <span></span><span></span><span></span>
+      </button>
+      <h1 class="logo">Coffee Heaven</h1>
+      
+      <div class="search">
+        <input type="text" placeholder="Поиск кофе..." id="searchInput">
+      </div>
 
+      <button class="cart-btn" aria-label="Корзина">
+        <span class="cart-icon">🛒</span>
+        <span class="cart-count">0</span>
+      </button>
+    </div>
+  </header>
+
+  <nav class="nav-mobile" id="mobileNav">
+    <ul class="categories-list">
+      <li><a href="#" data-category="all" class="active">Все</a></li>
+      <li><a href="#" data-category="espresso">Эспрессо</a></li>
+      <li><a href="#" data-category="milk">Молочные</a></li>
+      <li><a href="#" data-category="special">Специальные</a></li>
+    </ul>
+  </nav>
+
+  <main class="main">
+    <section class="hero">
+      <h2>Добро пожаловать в Coffee Heaven</h2>
+      <p>Самый вкусный кофе в городе</p>
+    </section>
+
+    <section class="menu">
+      <div class="container">
+        <div class="categories-desktop">
+          <button data-category="all" class="active">Все</button>
+          <button data-category="espresso">Эспрессо</button>
+          <button data-category="milk">Молочные</button>
+          <button data-category="special">Специальные</button>
+        </div>
+
+        <div class="coffee-grid" id="coffeeGrid">
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <div class="cart-modal" id="cartModal">
+    <div class="cart-content">
+      <h3>Ваш заказ</h3>
+      <div id="cartItems"></div>
+      <div class="cart-total">Итого: <strong id="totalPrice">0 ₽</strong></div>
+      <button class="close-cart">Закрыть</button>
+    </div>
+  </div>
+
+  <script src="code.js"></script>
+</body>
+</html>
