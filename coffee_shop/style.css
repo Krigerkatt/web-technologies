@@ -136,6 +136,24 @@ header {
   cursor: pointer;
 }
 
+.coffee-card .price { 
+  padding: 0 1rem 0.5rem; 
+  font-weight: bold; 
+  font-size: 1.3rem; 
+  color: #d4a574;
+}
+
+.coffee-card button {
+  margin: 0 1rem 1rem;
+  padding: 0.7rem 1.5rem;
+  background: #d4a574;
+  color: white;
+  border: none;
+  border-radius: 30px;
+  cursor: pointer;
+  width: calc(100% - 2rem);
+}
+
 @media (max-width: 768px) {
   .burger { display: flex; }
   .categories-desktop { display: none; }
