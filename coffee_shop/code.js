@@ -12,6 +12,34 @@ function renderCoffee(items = coffeeData) {
   ).join('');
 }
 
+document.querySelectorAll('[data-category]').forEach(button => {
+  button.addEventListener('click', function (e) {
+    e.preventDefault();
+
+    const selectedCategory = this.dataset.category;
+
+    document.querySelectorAll('[data-category]').forEach(btn => {
+      btn.classList.remove('active');
+    });
+    this.classList.add('active');
+
+    let filtered;
+    if (selectedCategory === 'all') {
+      filtered = coffeeData;
+    } else {
+      filtered = coffeeData.filter(coffee =>
+        Array.isArray(coffee.category)
+          ? coffee.category.includes(selectedCategory)
+          : coffee.category === selectedCategory
+      );
+    }
+
+    renderCoffee(filtered);
+  });
+});
+
 document.addEventListener('DOMContentLoaded', () => {
   renderCoffee();
+
+  document.querySelector('[data-category="all"]')?.classList.add('active');
 });
