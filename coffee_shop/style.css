@@ -163,6 +163,38 @@ header {
   color: #888;
 }
 
+.cart-modal {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.6);
+  z-index: 1000;
+  align-items: center;
+  justify-content: center;
+}
+.cart-modal.active { display: flex; }
+
+.cart-content {
+  background: white;
+  border-radius: 16px;
+  padding: 2rem;
+  width: 90%;
+  max-width: 500px;
+  max-height: 90vh;
+  overflow-y: auto;
+}
+.cart-total { margin: 1.5rem 0; font-size: 1.4rem; text-align: right; }
+.close-cart {
+  width: 100%;
+  padding: 1rem;
+  background: #d4a574;
+  color: white;
+  border: none;
+  border-radius: 12px;
+  font-size: 1.1rem;
+  cursor: pointer;
+}
+
 @media (max-width: 768px) {
   .burger { display: flex; }
   .categories-desktop { display: none; }
