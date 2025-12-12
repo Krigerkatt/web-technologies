@@ -2,63 +2,87 @@ let cart = JSON.parse(localStorage.getItem('coffeeCart')) || [];
 
 function updateCartCounter() {
   const counters = document.querySelectorAll('.cart-count');
-  const total = cart.reduce((sum, item) => sum + item.quantity, 0);
-  counters.forEach(el => el.textContent = total);
+  const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
+  counters.forEach(el => el.textContent = totalItems || '0');
 }
 
 function saveCart() {
   localStorage.setItem('coffeeCart', JSON.stringify(cart));
   updateCartCounter();
+  renderCartSidebar();
 }
 
-function addToCartSimple(id) {
-  const coffee = coffeeData.find(c => c.id === id);
-  const existing = cart.find(item => item.id === id);
+function renderCartSidebar() {
+  const body = document.getElementById('cartBody');
+  const subtotalEl = document.getElementById('subtotal');
+  const totalEl = document.getElementById('totalAmount');
 
-  if (existing) {
-    existing.quantity += 1;
-  } else {
-    cart.push({ ...coffee, quantity: 1 });
+  if (cart.length === 0) {
+    body.innerHTML = '<p class="empty-cart">Корзина пуста</p>';
+    subtotalEl.textContent = '0 ₽';
+    totalEl.textContent = '0 ₽';
+    return;
   }
-  saveCart();
-  alert(`${coffee.name} добавлен в корзину!`);
+
+  body.innerHTML = cart.map((item, index) => 
+    `<div class="cart-item">
+      <img src="${item.img}" alt="${item.name}">
+      <div class="cart-item-info">
+        <div class="cart-item-name">${item.name}</div>
+        <div class="cart-item-options">
+          ${item.size ? item.size + ' • ' : ''}
+          ${item.milk && item.milk !== 'regular' ? item.milk + ' milk' : ''}
+          ${item.sugar ? '• +sugar' : ''}
+        </div>
+        <div class="quantity-controls">
+          <button onclick="changeQuantity(${index}, -1})">−</button>
+          <span>${item.quantity}</span>
+          <button onclick="changeQuantity(${index}, +1)">+</button>
+          <button class="remove-item" onclick="removeFromCart(${index})">✕</button>
+        </div>
+      </div>
+      <div class="cart-item-price">${item.price * item.quantity} ₽</div>
+    </div>`
+  ).join('');
+
+  const total = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
+  subtotalEl.textContent = total + ' ₽';
+  totalEl.textContent = total + ' ₽';
+}
+
+function changeQuantity(index, delta) {
+  cart[index].quantity += delta;
+  if (cart[index].quantity <= 0) removeFromCart(index);
+  else saveCart();
 }
 
 function removeFromCart(index) {
   cart.splice(index, 1);
   saveCart();
-  renderCartModal();
 }
 
-function renderCartModal() {
-  const container = document.getElementById('cartItems');
-  const totalEl = document.getElementById('totalPrice');
+document.querySelectorAll('.cart-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.getElementById('cartSidebar').classList.add('active');
+    renderCartSidebar();
+  });
+});
 
-  if (!container) return;
+document.getElementById('hideCart')?.addEventListener('click', () => {
+  document.getElementById('cartSidebar').classList.remove('active');
+});
 
-  if (cart.length === 0) {
-    container.innerHTML = '<p style="text-align:center;padding:2rem;color:#888;">Корзина пуста</p>';
-    totalEl.textContent = '0 ₽';
-    return;
-  }
+function addToCartSimple(id) {
+  const coffee = coffeeData.find(c => c.id === id);
+  const existing = cart.find(item => item.id === id);
 
-  container.innerHTML = cart.map((item, idx) => 
-    `<div style="display:flex;justify-content:space-between;align-items:center;padding:0.8rem 0;border-bottom:1px solid #eee;">
-      <div>
-        <strong>${item.name}</strong><br>
-        <small>${item.price} ₽ × ${item.quantity}</small>
-      </div>
-      <div>
-        <strong>${item.price * item.quantity} ₽</strong>
-        <button onclick="removeFromCart(index)" style="margin-left:10px;background:#b85c5c;color:white;border:none;padding:5px 10px;border-radius:5px;cursor:pointer;">✕</button>
-      </div>
-    </div>`
-  ).join('');
+  if (existing) existing.quantity += 1;
+  else cart.push({ ...coffee, quantity: 1, size: null, milk: null, sugar: false });
 
-  const total = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
-  totalEl.textContent = total + ' ₽';
+  saveCart();
 }
 
+updateCartCounter();
 function renderCoffee(items = coffeeData) {
   const grid = document.getElementById('coffeeGrid');
   if (!grid) return;
@@ -68,7 +92,7 @@ function renderCoffee(items = coffeeData) {
       <img src="${coffee.img}" alt="${coffee.name}">
       <h3>${coffee.name}</h3>
       <p class="price">${coffee.price} ₽</p>
-      <button class="add-btn" onclick="addToCartSimple(${coffee.id})">В корзину</button>
+      <button class="add-btn" onclick="addToCartSimple(${coffee.id}); event.stopPropagation()">В корзину</button>
     </article>`
   ).join('');
 }

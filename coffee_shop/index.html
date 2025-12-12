@@ -26,16 +26,6 @@
     </div>
   </header>
 
-  <nav class="nav-mobile" id="mobileNav">
-    <ul class="categories-list">
-      <li><a href="#" data-category="all" class="active">Все</a></li>
-      <li><a href="#" data-category="black">Чёрный кофе</a></li>
-      <li><a href="#" data-category="milky">Молочные</a></li>
-      <li><a href="#" data-category="basic">Классика</a></li>
-      <li><a href="#" data-category="special">Авторские</a></li>
-    </ul>
-  </nav>
-
   <main class="main">
     <section class="hero">
       <h2>Добро пожаловать в Coffee Heaven</h2>
@@ -58,14 +48,26 @@
     </section>
   </main>
 
-  <div class="cart-modal" id="cartModal">
-    <div class="cart-content">
-      <h3>Ваш заказ</h3>
-      <div id="cartItems"></div>
-      <div class="cart-total">Итого: <strong id="totalPrice">0 ₽</strong></div>
-      <button class="close-cart">Закрыть</button>
-    </div>
+<aside class="cart-sidebar" id="cartSidebar">
+  <div class="cart-header">
+    <h3>Order</h3>
+    <button class="hide-cart" id="hideCart">HIDE →</button>
   </div>
+  <div class="cart-body" id="cartBody">
+    <p class="empty-cart">Корзина пуста</p>
+  </div>
+  <div class="cart-footer">
+    <div class="subtotal">
+      <span>Subtotal</span>
+      <span id="subtotal">0 ₽</span>
+    </div>
+    <div class="total">
+      <strong>Total</strong>
+      <strong id="totalAmount">0 ₽</strong>
+    </div>
+    <button class="place-order">Оформить заказ</button>
+  </div>
+</aside>
 
   <script src="data.js"></script>
   <script src="code.js"></script>
