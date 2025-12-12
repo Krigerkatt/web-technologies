@@ -1,4 +1,3 @@
-// ==================== КОРЗИНА ====================
 let cart = JSON.parse(localStorage.getItem('coffeeCart')) || [];
 
 const syncCartFromStorage = () => {
@@ -24,14 +23,12 @@ const updateCartCounter = () => {
   });
 };
 
-// ==================== БЕЗОПАСНЫЙ HTML ====================
 const escapeHTML = (str) => {
   const div = document.createElement('div');
   div.textContent = str;
   return div.innerHTML;
 };
 
-// ==================== РЕНДЕР КАРТОЧЕК ====================
 const renderCoffee = (items = coffeeData) => {
   const grid = document.getElementById('coffeeGrid');
   if (!grid) return;
@@ -58,7 +55,6 @@ const renderCoffee = (items = coffeeData) => {
     `;
   }).join('');
 
-  // Делегирование вместо inline onclick
   grid.querySelectorAll('.coffee-card').forEach(card => {
     card.addEventListener('click', () => {
       openDetail(card.dataset.id);
@@ -73,12 +69,11 @@ const renderCoffee = (items = coffeeData) => {
   });
 };
 
-// Простое добавление (с главной)
 const addToCartSimple = (id) => {
   const coffee = coffeeData.find(c => c.id === id);
   if (!coffee) return;
 
-  const key = `${id}_standard`; // уникальный ключ для стандартного варианта
+  const key = `${id}_standard`;
   const existing = cart.find(item => item.uniqueKey === key);
 
   if (existing) {
@@ -94,7 +89,6 @@ const addToCartSimple = (id) => {
 
   saveCart();
 
-  // Анимация счётчика
   document.querySelectorAll('.cart-count').forEach(c => {
     c.style.transform = 'scale(1.4)';
     setTimeout(() => c.style.transform = '', 300);
@@ -105,7 +99,6 @@ const openDetail = (id) => {
   window.location.href = `detail.html?id=${id}`;
 };
 
-// ==================== ПОИСК + ФИЛЬТРЫ ====================
 let currentFilter = 'all';
 let currentSearch = '';
 
@@ -124,9 +117,7 @@ const applyFilters = () => {
   renderCoffee(filtered);
 };
 
-// Инициализация фильтров
 document.addEventListener('DOMContentLoaded', () => {
-  // Фильтры по категориям
   document.querySelectorAll('[data-category]').forEach(btn => {
     btn.addEventListener('click', () => {
       document.querySelectorAll('[data-category]').forEach(b => b.classList.remove('active'));
@@ -136,7 +127,6 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
-  // Поиск
   const searchInput = document.getElementById('searchInput');
   if (searchInput) {
     searchInput.addEventListener('input', (e) => {
@@ -145,12 +135,10 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // Мобильное меню
   document.querySelector('.burger')?.addEventListener('click', () => {
     document.querySelector('.nav-mobile').classList.toggle('active');
   });
 
-  // Пункты мобильного меню
   document.querySelectorAll('.nav-mobile button[data-category]').forEach(btn => {
     btn.addEventListener('click', () => {
       document.querySelector('.nav-mobile').classList.remove('active');
@@ -162,7 +150,6 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
-  // Инициализация
   renderCoffee();
   updateCartCounter();
   renderCartSidebar();
@@ -174,7 +161,6 @@ document.addEventListener('visibilitychange', () => {
   if (document.visibilityState === 'visible') syncCartFromStorage();
 });
 
-// ==================== БОКОВАЯ КОРЗИНА ====================
 const renderCartSidebar = () => {
   const body = document.getElementById('cartBody');
   const totalEl = document.getElementById('totalAmount');
@@ -207,7 +193,7 @@ const renderCartSidebar = () => {
             <button data-index="${index}" data-delta="-1">−</button>
             <span>${item.quantity}</span>
             <button data-index="${index}" data-delta="1">+</button>
-            <button class="remove-item" data-index="${index}">Удалить</button>
+            <button class="remove-item" data-index="${index}">Х</button>
           </div>
         </div>
         <div class="cart-item-price">${(item.finalPrice || item.price) * item.quantity} ₽</div>
@@ -217,7 +203,6 @@ const renderCartSidebar = () => {
 
   totalEl.textContent = totalSum + ' ₽';
 
-  // Делегирование событий корзины
   body.querySelectorAll('button[data-index]').forEach(btn => {
     btn.addEventListener('click', () => {
       const index = +btn.dataset.index;
@@ -246,7 +231,6 @@ const removeFromCart = (index) => {
   saveCart();
 };
 
-// Открытие/закрытие корзины
 document.querySelectorAll('.cart-btn').forEach(btn => {
   btn.addEventListener('click', () => {
     document.getElementById('cartSidebar')?.classList.add('active');
@@ -258,7 +242,6 @@ document.getElementById('hideCart')?.addEventListener('click', () => {
   document.getElementById('cartSidebar')?.classList.remove('active');
 });
 
-// ==================== СТРАНИЦА ДЕТАЛЕЙ ====================
 if (window.location.pathname.includes('detail.html')) {
   document.addEventListener('DOMContentLoaded', () => {
     const params = new URLSearchParams(window.location.search);
@@ -285,12 +268,11 @@ if (window.location.pathname.includes('detail.html')) {
     sugar = false;
     quantity = 1;
 
-    const updatePrice = () => {/////////////////////////////////////////////////////////////////
+    const updatePrice = () => {
       const final = Math.round((coffee.price * sizeMult + milkPrice) * quantity);
       document.getElementById('detailPrice').textContent = final + ' ₽';
     };
 
-    // Размеры
     document.querySelectorAll('.size-btn').forEach(btn => {
       btn.addEventListener('click', () => {
         document.querySelectorAll('.size-btn').forEach(b => b.classList.remove('active'));
@@ -302,7 +284,6 @@ if (window.location.pathname.includes('detail.html')) {
       });
     });
 
-    // Молоко
     document.querySelectorAll('.milk-btn').forEach(btn => {
       btn.addEventListener('click', () => {
         document.querySelectorAll('.milk-btn').forEach(b => b.classList.remove('active'));
@@ -314,12 +295,10 @@ if (window.location.pathname.includes('detail.html')) {
       });
     });
 
-    // Сахар
     document.getElementById('extraSugar').addEventListener('change', e => {
       sugar = e.target.checked;
     });
 
-    // Количество
     document.getElementById('dec').onclick = () => {
       if (quantity > 1) {
         quantity--;
@@ -334,7 +313,6 @@ if (window.location.pathname.includes('detail.html')) {
       updatePrice();
     };
 
-    // Кнопка добавления
     document.querySelector('.add-to-cart-big').addEventListener('click', () => {
       const item = {
         ...coffee,
@@ -345,7 +323,7 @@ if (window.location.pathname.includes('detail.html')) {
         sugar: sugar ? true : null,
         quantity,
         finalPrice: Math.round(coffee.price * sizeMult + milkPrice),
-        uniqueKey: `${coffee.id}_${size}_${milk}_${sugar}` // уникальность комбинации
+        uniqueKey: `${coffee.id}_${size}_${milk}_${sugar}`
       };
 
       const existingIndex = cart.findIndex(ex => ex.uniqueKey === item.uniqueKey);
@@ -368,14 +346,12 @@ if (window.location.pathname.includes('detail.html')) {
       }, 800);
     });
 
-    // Активный размер по умолчанию
     document.querySelector('.size-btn[data-size="tall"]')?.classList.add('active');
     document.querySelector('.milk-btn[data-milk="regular"]')?.classList.add('active');
     updatePrice();
   });
 }
 
-// ==================== ОФОРМЛЕНИЕ ЗАКАЗА ====================
 document.querySelectorAll('.place-order').forEach(btn => {
   {
   btn.addEventListener('click', () => {
